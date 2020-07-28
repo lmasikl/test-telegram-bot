@@ -15,7 +15,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-exchange = Exchange()
+exchange = Exchange(cache_size=2)
 
 
 def start(update, context):
@@ -31,19 +31,19 @@ def convert(update, context):
         update.message.reply_text('3 params required')
     else:
         try:
-            result = exchange.make_deal(*data)
-            message = f'{data[0]} {data[1]} = {result:.3f}'
+            result, meta = exchange.make_deal(*data)
+            caption = f'{data[0]} {data[1]} = {result:.3f} {data[2]}'
+            update.message.reply_photo(open(meta[2], 'rb'), caption=caption)
         except ExchangeException as error:
-            message = str(error)
-        except Exception:
-            message = 'Something went wrong'
-
-        update.message.reply_text(message)
+            update.message.reply_text(str(error))
+        except Exception as error:
+            update.message.reply_text(f'Something went wrong: {error}')
 
 
 def main():
     """Start the bot."""
     token = os.environ.get("BOT_API_TOKEN")
+    token = "1397508856:AAFdwf3jC6njilYwSgFFZwl3-J-Mr9o3sA0"
     assert token is not None
     updater = Updater(token, use_context=True)
 
@@ -57,11 +57,7 @@ def main():
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, convert))
 
     # Start the Bot
-    # if os.environ.get("HEROKU_DEPLOYMENT", None) is None:
     updater.start_polling()
-    # else:
-    #     updater.start_webhook(listen="0.0.0.0", port=5000, url_path=token)
-    #     updater.bot.setWebhook('https://wms-test-telegram-bot.herokuapp.com/' + token)
 
     logging.info('Bot is ready')
 
