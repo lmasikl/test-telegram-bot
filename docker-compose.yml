@@ -1,0 +1,15 @@
+version: "2"
+
+services:
+
+  bot:
+    build: .
+    container_name: bot.wms
+    environment:
+      BOT_API_TOKEN: "1397508856:AAFdwf3jC6njilYwSgFFZwl3-J-Mr9o3sA0"
+    networks:
+      - wms-network
+
+networks:
+  wms-network:
+    driver: bridge
