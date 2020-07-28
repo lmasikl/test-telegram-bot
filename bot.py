@@ -57,11 +57,11 @@ def main():
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, convert))
 
     # Start the Bot
-    if os.environ.get("HEROKU_DEPLOYMENT", None) is None:
-        updater.start_polling()
-    else:
-        updater.start_webhook(listen="0.0.0.0", port=5000, url_path=token)
-        updater.bot.setWebhook('https://wms-test-telegram-bot.herokuapp.com/' + token)
+    # if os.environ.get("HEROKU_DEPLOYMENT", None) is None:
+    updater.start_polling()
+    # else:
+    #     updater.start_webhook(listen="0.0.0.0", port=5000, url_path=token)
+    #     updater.bot.setWebhook('https://wms-test-telegram-bot.herokuapp.com/' + token)
 
     logging.info('Bot is ready')
 
