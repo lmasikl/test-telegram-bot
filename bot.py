@@ -44,7 +44,6 @@ def convert(update, context):
 def main():
     """Start the bot."""
     token = os.environ.get("BOT_API_TOKEN")
-    token = "1397508856:AAFdwf3jC6njilYwSgFFZwl3-J-Mr9o3sA0"
     assert token is not None
     updater = Updater(token, use_context=True)
 
@@ -58,7 +57,12 @@ def main():
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, convert))
 
     # Start the Bot
-    updater.start_polling()
+    if os.environ.get("HEROKU_DEPLOYMENT", None) is None:
+        updater.start_polling()
+    else:
+        updater.start_webhook(listen="0.0.0.0", port=5000, url_path=token)
+        updater.bot.setWebhook('https://wms-test-telegram-bot.herokuapp.com/' + token)
+
     logging.info('Bot is ready')
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
