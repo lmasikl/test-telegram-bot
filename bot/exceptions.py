@@ -1,0 +1,2 @@
+class ExchangeException(Exception):
+    pass
